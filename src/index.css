@@ -109,7 +109,7 @@ h1 {
 
 .player-name {
   display: inline-block;
-  width: 10rem;
+  width: 10rem; 
   font-size: 1rem;
   color: #e1dec7;
   text-transform: uppercase;
@@ -130,6 +130,10 @@ h1 {
   background-color: #46432f;
   text-align: center;
   text-transform: uppercase;
+}
+
+.player input::placeholder{
+  font-size: 0.8rem;
 }
 
 .player-symbol {
