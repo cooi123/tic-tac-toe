@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Player({ initialName, isCross }) {
+export default function Player({ initialName, isCross, isActivePlayer}) {
   // hook for state managing the current/updated playername
   const [playerName, setPlayerName] = useState(initialName);
   // hook for state managing 'edit'/'save' output
@@ -16,7 +16,7 @@ export default function Player({ initialName, isCross }) {
   }
 
   return (
-    <li>
+    <li className={isActivePlayer ? 'active' : undefined }>
       <span className="player">
         {isEditing ? (
           <input

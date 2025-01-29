@@ -6,30 +6,36 @@ const initialGameboard = [
   [null, null, null],
 ];
 
-export default function Gameboard() {
-  const [prevGameboard, setGameboard] = useState(initialGameboard);
+export default function Gameboard({ symbol, onSelectSquare }) {
+  const [currentGameboard, setGameboard] = useState(initialGameboard);
 
   function handleGameboardState(rowIndex, colIndex) {
-    setGameboard(() => {
-      // make deep copy of board
+    setGameboard((prevGameboard) => {
+      // make deep copy of previous board
       const updatedGameboard = prevGameboard.map((innerArray) => [
         ...innerArray,
       ]);
       // update symbol on the UI tile
-      updatedGameboard[rowIndex][colIndex] = "X";
+      updatedGameboard[rowIndex][colIndex] = symbol;
       return updatedGameboard;
     });
+
+    // every time a square is clicked on, React will recall Gameboard component, which will
+    // in turn call onSelectSquare() function. This will switch the active players.
+    onSelectSquare();
   }
 
   return (
     <ol id="game-board">
-      {prevGameboard.map((row, rowIndex) => (
+      {currentGameboard.map((row, rowIndex) => (
         <li key={rowIndex}>
           <ol>
             {row.map((playerSymbol, colIndex) => (
               <li key={colIndex}>
                 <button
-                  onClick={() => handleGameboardState(rowIndex, colIndex)}
+                  onClick={() =>
+                    handleGameboardState(rowIndex, colIndex)
+                  }
                 >
                   {playerSymbol}
                 </button>
