@@ -7,7 +7,12 @@ export default function Gameboard({ turns, onSelectSquare }) {
   // update the state of the gameboard
   for (const { cell, player } of turns) {
     const { row, col } = cell;
-    gameboard[row][col] = player;
+    
+    // cannot override a taken slot on the board
+    if (!gameboard[row][col]){
+      gameboard[row][col] = player;
+    }
+    
   }
 
   return (
@@ -17,7 +22,10 @@ export default function Gameboard({ turns, onSelectSquare }) {
           <ol>
             {row.map((playerSymbol, colIndex) => (
               <li key={colIndex}>
-                <button onClick={() => onSelectSquare(rowIndex, colIndex)}>
+                <button
+                  onClick={() => onSelectSquare(rowIndex, colIndex)}
+                  disabled={playerSymbol != null}
+                >
                   {playerSymbol}
                 </button>
               </li>
