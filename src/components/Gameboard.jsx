@@ -1,10 +1,9 @@
-const gameboard = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
-
 export default function Gameboard({ turns, onSelectSquare }) {
+  const gameboard = [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ];
   // update the state of the gameboard
   for (const { cell, player } of turns) {
     const { row, col } = cell;
