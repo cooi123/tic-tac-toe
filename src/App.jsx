@@ -15,13 +15,13 @@ function deriveActivePlayerSymbol(gameTurns) {
   return currentPlayerSymbol;
 }
 
-const gameboard = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
-
 function App() {
+  const gameboard = [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ];
+
   const [gameTurns, setGameTurns] = useState([]);
 
   const activePlayer = deriveActivePlayerSymbol(gameTurns);
@@ -70,6 +70,10 @@ function App() {
     });
   }
 
+  function handleOnRematch() {
+    setGameTurns(() => []);
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -85,7 +89,9 @@ function App() {
             isActivePlayer={activePlayer === "O"}
           />
         </ol>
-        {(winner || hasDraw) && <GameOver winner={winner} />}
+        {(winner || hasDraw) && (
+          <GameOver winner={winner} onRematch={handleOnRematch} />
+        )}
         <Gameboard
           gameboard={gameboard}
           onSelectSquare={handleOnSelectSquare}
