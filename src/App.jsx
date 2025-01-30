@@ -2,6 +2,7 @@ import Gameboard from "./components/Gameboard";
 import Player from "./components/Player";
 import { useState } from "react";
 import Log from "./components/Log";
+import { WINNING_COMBINATIONS } from "../winning-combinations";
 
 function deriveActivePlayerSymbol(gameTurns) {
   let currentPlayerSymbol = "X";
@@ -13,15 +14,42 @@ function deriveActivePlayerSymbol(gameTurns) {
   return currentPlayerSymbol;
 }
 
-function App() {
+const gameboard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
 
+function App() {
   const [gameTurns, setGameTurns] = useState([]);
 
   const activePlayer = deriveActivePlayerSymbol(gameTurns);
 
+  // update the state of the gameboard
+  for (const { cell, player } of gameTurns) {
+    const { row, col } = cell;
+
+    // cannot override a taken slot on the board
+    if (!gameboard[row][col]) {
+      gameboard[row][col] = player;
+    }
+  }
+
+  let winner;
+
+  // check if a player has won after every turn
+  for (const combination of WINNING_COMBINATIONS){
+    const firstSquareSymbol = gameboard[combination[0].row][combination[0].column];
+    const secondSquareSymbol = gameboard[combination[1].row][combination[1].column];
+    const thirdSquareSymbol = gameboard[combination[2].row][combination[2].column];
+
+    if ( firstSquareSymbol && firstSquareSymbol === secondSquareSymbol  && secondSquareSymbol ===thirdSquareSymbol){
+        winner = firstSquareSymbol;
+    }
+    
+  }
+
   function handleOnSelectSquare(rowIndex, colIndex) {
-
-
     // update gameboard grid data so they can be passed to Gameboard and Log components
     setGameTurns((prevTurns) => {
       const activePlayerSymbol = deriveActivePlayerSymbol(prevTurns);
@@ -45,10 +73,14 @@ function App() {
           <Player
             initialName="Player 2"
             isCross={false}
-            isActivePlayer={ activePlayer=== "O"}
+            isActivePlayer={activePlayer === "O"}
           />
         </ol>
-        <Gameboard turns={gameTurns} onSelectSquare={handleOnSelectSquare} />
+        {winner && <p>You won, {winner}!</p>}
+        <Gameboard
+          gameboard={gameboard}
+          onSelectSquare={handleOnSelectSquare}
+        />
       </div>
       <Log turns={gameTurns} />
     </main>
