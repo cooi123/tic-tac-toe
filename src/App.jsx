@@ -3,6 +3,7 @@ import Player from "./components/Player";
 import { useState } from "react";
 import Log from "./components/Log";
 import { WINNING_COMBINATIONS } from "../winning-combinations";
+import GameOver from "./components/GameOver";
 
 function deriveActivePlayerSymbol(gameTurns) {
   let currentPlayerSymbol = "X";
@@ -76,7 +77,7 @@ function App() {
             isActivePlayer={activePlayer === "O"}
           />
         </ol>
-        {winner && <p>You won, {winner}!</p>}
+        {winner && <GameOver winner = {winner} />}
         <Gameboard
           gameboard={gameboard}
           onSelectSquare={handleOnSelectSquare}
