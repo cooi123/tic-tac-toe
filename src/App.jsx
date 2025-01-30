@@ -5,6 +5,11 @@ import Log from "./components/Log";
 import { WINNING_COMBINATIONS } from "../winning-combinations";
 import GameOver from "./components/GameOver";
 
+const PLAYERS = {
+  X: "Player 1",
+  O: "Player 2",
+};
+
 function deriveActivePlayerSymbol(gameTurns) {
   let currentPlayerSymbol = "X";
   // empty turns array means that game has not started. First player is always X.
@@ -15,33 +20,7 @@ function deriveActivePlayerSymbol(gameTurns) {
   return currentPlayerSymbol;
 }
 
-function App() {
-  const gameboard = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-  ];
-
-  const [gameTurns, setGameTurns] = useState([]);
-
-  // track player names for personalized Game Over message
-  const [playerNames, setPlayerNames] = useState({
-    X: "Player 1",
-    O: "Player 2",
-  });
-
-  const activePlayer = deriveActivePlayerSymbol(gameTurns);
-
-  // update the state of the gameboard
-  for (const { cell, player } of gameTurns) {
-    const { row, col } = cell;
-
-    // cannot override a taken slot on the board
-    if (!gameboard[row][col]) {
-      gameboard[row][col] = player;
-    }
-  }
-
+function deriveWinner(gameboard, playerNames) {
   let winner;
 
   // check if a player has won after every turn
@@ -61,6 +40,42 @@ function App() {
       winner = playerNames[firstSquareSymbol];
     }
   }
+
+  return winner;
+}
+
+function deriveGameboard(gameTurns) {
+  const gameboard = [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ];
+
+  // update the state of the gameboard
+  for (const { cell, player } of gameTurns) {
+    const { row, col } = cell;
+
+    // cannot override a taken slot on the board
+    if (!gameboard[row][col]) {
+      gameboard[row][col] = player;
+    }
+  }
+
+  return gameboard;
+}
+
+function App() {
+  const [gameTurns, setGameTurns] = useState([]);
+
+  // track player names for personalized Game Over message
+  const [playerNames, setPlayerNames] = useState(PLAYERS);
+
+  const activePlayer = deriveActivePlayerSymbol(gameTurns);
+
+  const gameboard = deriveGameboard(gameTurns);
+
+  // check for winner
+  const winner = deriveWinner(gameboard, playerNames);
 
   const hasDraw = gameTurns.length === 9 && !winner;
 
@@ -89,14 +104,14 @@ function App() {
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
-            initialName="Player 1"
-            symbol = 'X'
+            initialName= {PLAYERS.X}
+            symbol="X"
             isActivePlayer={activePlayer === "X"}
             onSaveClick={onPlayerNameChange}
           />
           <Player
-            initialName="Player 2"
-            symbol = 'O'
+            initialName= {PLAYERS.O}
+            symbol="O"
             isActivePlayer={activePlayer === "O"}
             onSaveClick={onPlayerNameChange}
           />
