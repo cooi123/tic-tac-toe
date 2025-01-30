@@ -24,6 +24,12 @@ function App() {
 
   const [gameTurns, setGameTurns] = useState([]);
 
+  // track player names for personalized Game Over message
+  const [playerNames, setPlayerNames] = useState({
+    X: "Player 1",
+    O: "Player 2",
+  });
+
   const activePlayer = deriveActivePlayerSymbol(gameTurns);
 
   // update the state of the gameboard
@@ -52,7 +58,7 @@ function App() {
       firstSquareSymbol === secondSquareSymbol &&
       secondSquareSymbol === thirdSquareSymbol
     ) {
-      winner = firstSquareSymbol;
+      winner = playerNames[firstSquareSymbol];
     }
   }
 
@@ -74,19 +80,25 @@ function App() {
     setGameTurns(() => []);
   }
 
+  function onPlayerNameChange(symbol, newName) {
+    setPlayerNames((prevNames) => ({ ...prevNames, [symbol]: newName }));
+  }
+
   return (
     <main>
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
             initialName="Player 1"
-            isCross={true}
+            symbol = 'X'
             isActivePlayer={activePlayer === "X"}
+            onSaveClick={onPlayerNameChange}
           />
           <Player
             initialName="Player 2"
-            isCross={false}
+            symbol = 'O'
             isActivePlayer={activePlayer === "O"}
+            onSaveClick={onPlayerNameChange}
           />
         </ol>
         {(winner || hasDraw) && (
