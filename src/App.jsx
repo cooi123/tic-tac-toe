@@ -39,16 +39,24 @@ function App() {
   let winner;
 
   // check if a player has won after every turn
-  for (const combination of WINNING_COMBINATIONS){
-    const firstSquareSymbol = gameboard[combination[0].row][combination[0].column];
-    const secondSquareSymbol = gameboard[combination[1].row][combination[1].column];
-    const thirdSquareSymbol = gameboard[combination[2].row][combination[2].column];
+  for (const combination of WINNING_COMBINATIONS) {
+    const firstSquareSymbol =
+      gameboard[combination[0].row][combination[0].column];
+    const secondSquareSymbol =
+      gameboard[combination[1].row][combination[1].column];
+    const thirdSquareSymbol =
+      gameboard[combination[2].row][combination[2].column];
 
-    if ( firstSquareSymbol && firstSquareSymbol === secondSquareSymbol  && secondSquareSymbol ===thirdSquareSymbol){
-        winner = firstSquareSymbol;
+    if (
+      firstSquareSymbol &&
+      firstSquareSymbol === secondSquareSymbol &&
+      secondSquareSymbol === thirdSquareSymbol
+    ) {
+      winner = firstSquareSymbol;
     }
-    
   }
+
+  const hasDraw = gameTurns.length === 9 && !winner;
 
   function handleOnSelectSquare(rowIndex, colIndex) {
     // update gameboard grid data so they can be passed to Gameboard and Log components
@@ -77,7 +85,7 @@ function App() {
             isActivePlayer={activePlayer === "O"}
           />
         </ol>
-        {winner && <GameOver winner = {winner} />}
+        {(winner || hasDraw) && <GameOver winner={winner} />}
         <Gameboard
           gameboard={gameboard}
           onSelectSquare={handleOnSelectSquare}
